@@ -20,5 +20,9 @@ def blockchain_page():
     ]
     return render_template('blockchain.html', items = items)
 
+@app.route('/mine')
+def mine_page():
+    return render_template('mine.html')
+
 if __name__ == "__main__":
     app.run(debug=True)
