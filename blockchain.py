@@ -8,6 +8,7 @@ from Crypto.Signature import *
 from uuid import uuid4
 import jsonpickle
 from urllib.parse import urlparse
+import requests
 from transaction import *
 from block import *
 
@@ -87,7 +88,27 @@ class Blockchain (object):
         pay_miner = Transaction("George P. Burdell", miner, self.miner_reward)
         self.pending_transactions = [pay_miner]
         return True
+    
+    def is_valid_chain(self):
+        for i in range(len(self.chain) - 1):
+            block_1 = self.chain[i]
+            block_2 = self.chain[i + 1]
 
+            if not block_2.has_valid_transactions():
+                print("Error: Not valid block")
+                return False
+            
+            if block_2.hash != block_2.calculate_hash():
+                print("Error: Hash has been tampered with")
+                return False
+            
+            if block_2.prev != block_1.hash:
+                print("Error: Break in the chain")
+                return False
+                
+        # if it passes these cases return true
+        return True
+            
     def chain_JSON_encode(self): # encoding a chain object into a JSON we can use on the web
         blockArrJSON = []
         for block in self.chain:
@@ -154,8 +175,27 @@ class Blockchain (object):
         file_out.write(public_key)
 
         return key.public_key().exportKey().decode('ASCII') # returns an ascii decoded public keys
+    
+    def determine_master_chain(self):
+        others = self.nodes
 
-blockchain = Blockchain()
-pprint(blockchain.chain_JSON_encode())
-blockchain.generate_keys()
-blockchain.get_last_block().mine_block()
+        master_chain = None
+        
+        max_len = len(self.chain)
+
+        for node in others:
+            response = requests.get(f'http//{node}/chain')
+
+            if response.status_code == 200: # checking if this is a valid address
+                length = response.json()['length'] # retrieving length of other node's chain
+                chain = response.json()['chain'] # retrieving chain of other node
+
+                if length > max_len and self.is_valid_chain():
+                    max_len = length
+                    master_chain = chain
+        
+        if master_chain:
+            self.chain = self.chain_JSON_decode(master_chain)
+            return True
+
+        return False
