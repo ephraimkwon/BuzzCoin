@@ -53,7 +53,7 @@ class Blockchain (object):
             for transaction in block.transactions:
                 tJSON['time'] = transaction.time
                 tJSON['sender'] = transaction.sender
-                tJSON['reciever'] = transaction.reciever
+                tJSON['receiver'] = transaction.receiver
                 tJSON['amt'] = transaction.amt
                 tJSON['hash'] = transaction.hash
                 transactionsJSON.append(tJSON)
@@ -66,7 +66,7 @@ class Blockchain (object):
         for blockJSON in chainJSON:
             tArr = []
             for tJSON in blockJSON['transactions']:
-                transaction = Transaction(tJSON['sender'], tJSON['reciever'], tJSON['amt'])
+                transaction = Transaction(tJSON['sender'], tJSON['receiver'], tJSON['amt'])
                 transaction.time = tJSON['time']
                 transaction.hash = tJSON['hash']
                 tArr.append(transaction)
@@ -104,9 +104,9 @@ class Block (object):
         self.time = time #Time block was created
         self.prev = '' #Hash of Previous Block
         self.gold = "404"
-        self.hash = self.calculateHash() #Hash of Block
+        self.hash = self.calculate_hash() #Hash of Block
         
-    def calculateHash(self):
+    def calculate_hash(self):
         hashTransactions = ""
         for transaction in self.transactions:
             hashTransactions += transaction.hash
@@ -125,7 +125,7 @@ class Block (object):
         # checks the hash until the first 3 chars of the hash are "404" hehe
         while self.hash[0:len(self.gold)] != self.gold:
             self.nonse += 1
-            self.hash = self.calculateHash()
+            self.hash = self.calculate_hash()
             # print("Nonse: " , self.nonse)
             # print("Hash Attempt: " , self.hash)
             # print("Target Hash: " + self.gold + "...")
@@ -143,21 +143,21 @@ class Block (object):
 
 
 class Transaction (object):
-    def __init__(self, sender, reciever, amt):
+    def __init__(self, sender, receiver, amt):
         self.sender = sender
         self.receiver = receiver
         self.amt = amt
         self.time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        self.hash = self.calculateHash()
+        self.hash = self.calculate_hash()
 
-    def calculateHash(self):
-        hashString = self.sender + self.reciever + str(self.amt) + str(self.time)
+    def calculate_hash(self):
+        hashString = self.sender + self.receiver + str(self.amt) + str(self.time)
         hashEncoded = json.dumps(hashString, sort_keys=True).encode()
         return hashlib.sha256(hashEncoded).hexdigest()
     
     # returns True if transaction is valid
     def sign_transaction(self, key, sender_key) -> bool:
-        if self.hash != self.calculateHash():
+        if self.hash != self.calculate_hash():
             # means the transaction has been messed with
             return False
         if str(key.publickey().exportkey()) != str(sender_key.publickey().exportkey()):
@@ -171,7 +171,7 @@ class Transaction (object):
         return True
     
     def is_valid_transaction(self):
-        if self.hash != self.calculateHash():
+        if self.hash != self.calculate_hash():
             return False
         if self.sender == self.receiver:
             return False
