@@ -1,5 +1,7 @@
-from __init__ import app
+from buzzcoin import app
 from flask import render_template
+from buzzcoin.models import User
+
 @app.route('/')
 @app.route('/home')
 def home_page():

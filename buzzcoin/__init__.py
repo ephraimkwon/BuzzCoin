@@ -26,4 +26,4 @@ node_identifier = str(uuid4()).replace('-', '')
 
 blockchain = Blockchain()
 
-# import routes
+from buzzcoin import routes
