@@ -1,5 +1,6 @@
 from buzzcoin import app
 from flask import render_template
+from buzzcoin.forms import RegisterForm
 from buzzcoin.models import User
 
 @app.route('/')
@@ -23,3 +24,8 @@ def blockchain_page():
 @app.route('/mine')
 def mine_page():
     return render_template('mine.html')
+
+@app.route('/register')
+def register_page():
+    form = RegisterForm() 
+    return render_template('register.html',form=form)
