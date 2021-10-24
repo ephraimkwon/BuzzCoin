@@ -12,7 +12,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = "felkfsjeflkejldskjveslkfjw"
 # creates sql database of users and stuff
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
-app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 # for encryption purposes
 bcrypt = Bcrypt(app)

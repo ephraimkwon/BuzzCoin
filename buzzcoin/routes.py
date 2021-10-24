@@ -29,7 +29,7 @@ def node():
 	return render_template('node.html', title = "Node")
 
 @app.route("/transaction", methods=['GET', 'POST'])
-def transaction():
+def transaction_page():
     form = TransactionForm()
     formNL = TransactionNotLoggedInForm()
     if form.validate_on_submit():
