@@ -137,7 +137,18 @@ def consensus():
 
     return jsonify(response), 200
     
-@app.route('/login')
+@app.route('/login', methods = ['GET','POST'])
 def login_page():
     form = LoginForm()
-    return render_template('login.html',form=form)
+    if form.validate_on_submit():
+        user = User.query.filter_by(email_address=form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password_hash, form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            nextPage = request.args.get('next')
+            flash(f'Welcome! You are now logged in', 'success')
+            return redirect(nextPage) if nextPage else redirect(url_for('home_page'))
+        else:
+            flash('Login Unsuccessful. Please check email and password', 'danger')
+    else:
+        print("ur gay")
+    return render_template('login.html', form=form)

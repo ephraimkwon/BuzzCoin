@@ -4,8 +4,19 @@
 {% endblock %}
 {% block content %}
 <body class="text-center">
+    {% with messages = get_flashed_messages(with_categories = true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class = "alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+  {% endwith %}
     <div class="container">
         <form method="POST" class="form-register" style="color:white">
+            {{form.csrf_token}}
             <h1 class="h3 mb-3 font-weight-normal">
                 Log Into Your Account
             </h1>
