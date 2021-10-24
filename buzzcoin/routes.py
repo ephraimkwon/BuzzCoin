@@ -28,6 +28,10 @@ def mine_page():
 def node():
 	return render_template('node.html', title = "Node")
 
+@app.route('/account')
+def account_page():
+    return render_template('account.html')
+
 @app.route("/transaction", methods=['GET', 'POST'])
 def transaction_page():
     form = TransactionForm()
