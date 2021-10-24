@@ -12,23 +12,24 @@
         <th scope="col">To</th>
         <th scope="col">Amount</th>
         <th scope="col">Timestamp</th>
-        <th scope="col">Valid?</th>
     </tr>
 </thead>
 <tbody>
     <!-- Your rows inside the table HERE: -->
     {% for block in blockchain.chain %}
         <tr>
-            <td>{{block.receiver}}</td>
-            <td>{{block.prev}}</td>
-            <td>{{block.time}}</td>
+            <td>{{block.index}}</td>
+            <td>{{block.transactions.sender}}</td>
+            <td>{{block.transactions.receiver}}</td>
+            <td>{{block.transactions.amount}}</td>
+            <td>{{block.transactions.time}}</td>
             </td>
         </tr>
       {% endfor %}
 </tbody>
 </table>
 <body>
-  <button class="button btn btn-outline btn-info">Mine</button>
+  <a href="{{url_for('login')}}"><button type="button" class="button btn btn-outline btn-info">Mine</button></a>
 </body>
 <style>
   .button {
