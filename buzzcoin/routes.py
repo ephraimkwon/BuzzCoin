@@ -22,7 +22,7 @@ def blockchain_page():
 
 @app.route('/mine')
 def mine_page():
-    return render_template('mine.html', blockchain = blockchain)
+    return render_template('mine.html', blockchain=blockchain)
 
 @app.route("/node")
 def node():

@@ -29,7 +29,7 @@
 </tbody>
 </table>
 <body>
-  <a href="{{url_for('login')}}"><button type="button" class="button btn btn-outline btn-info">Mine</button></a>
+  <a href="{{url_for('mine', miner=current_user.username)}}"><button type="button" class="button btn btn-outline btn-info">Mine</button></a>
 </body>
 <style>
   .button {
