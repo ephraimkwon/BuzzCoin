@@ -1,7 +1,7 @@
 from wtforms.validators import Email
 from buzzcoin import app
 from flask import render_template, redirect, url_for, flash, request, jsonify
-from buzzcoin.forms import RegisterForm
+from buzzcoin.forms import RegisterForm, TransactionForm, LoginForm
 from buzzcoin.models import User
 from buzzcoin import blockchain, db
 
@@ -23,9 +23,10 @@ def blockchain_page():
 def mine_page():
     return render_template('mine.html', blockchain = blockchain)
 
-@app.route('/transactions')
+@app.route('/transaction')
 def transaction_page():
-    return render_template('transaction.html')
+    form = TransactionForm()
+    return render_template('transaction.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
@@ -105,3 +106,8 @@ def consensus():
         response = {'message': 'Our chain is authoritative', 'chain': blockchain.chain_JSON_encode()}
 
     return jsonify(response), 200
+    
+@app.route('/login')
+def login_page():
+    form = LoginForm()
+    return render_template('login.html',form=form)

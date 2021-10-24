@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-  Make Transactions
+  Transaction Form
 {% endblock %}
 {% block content %}
 <body class="text-center">
@@ -10,21 +10,21 @@
                 Please Create your Account
             </h1>
             <br>
-            {{ form.username.label() }}
-            {{ form.username(class="form-control", placeholder="User Name") }}
+            {{ form.sender.label() }}
+            {{ form.sender(class="form-control", placeholder="Sender") }}
 
-            {{ form.email_address.label() }}
-            {{ form.email_address(class="form-control", placeholder="Email Address") }}
+            {{ form.receiver.label() }}
+            {{ form.receiver(class="form-control", placeholder="Receiver") }}
 
-            {{ form.password1.label() }}
-            {{ form.password1(class="form-control", placeholder="Password") }}
+            {{ form.amount.label() }}
+            {{ form.amount(class="form-control", placeholder="Amount") }}
 
-            {{ form.password2.label() }}
-            {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+            {{ form.key.label() }}
+            {{ form.key(class="form-control", placeholder="Key") }}
 
             <br>
 
-            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+            {{ form.send(class="btn btn-lg btn-block btn-primary") }}
 
         </form>
     </div>

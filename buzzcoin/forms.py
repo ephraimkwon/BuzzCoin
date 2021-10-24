@@ -12,26 +12,26 @@ class RegisterForm(FlaskForm):
     submit = SubmitField(label='Create Account')
 
 class LoginForm(FlaskForm):
-    email = StringField('Email', validators= [DataRequired(), Email()], render_kw= {"placeholder": "Email"})
+    email = StringField(label='Email', validators= [DataRequired(), Email()], render_kw= {"placeholder": "Email"})
 
-    password = PasswordField("Password", validators= [DataRequired()], render_kw= {"placeholder": "Password"})
+    password = PasswordField(label="Password", validators= [DataRequired()], render_kw= {"placeholder": "Password"})
 
-    remember_me = BooleanField("Remember Me")
+    remember_me = BooleanField(label="Remember Me")
 
-    submit = SubmitField("Login")
+    submit = SubmitField(label="Login")
 
 
 class TransactionForm(FlaskForm):
 
-    sender = StringField("Sender", validators=[DataRequired(), Length(min = 3, max = 16)])
+    sender = StringField(label="Sender", validators=[DataRequired(), Length(min = 3, max = 16)])
 
-    receiver = StringField("Receiver", validators=[DataRequired(), Length(min = 3, max = 16)])
+    receiver = StringField(label="Receiver", validators=[DataRequired(), Length(min = 3, max = 16)])
 
-    amount = IntegerField("Amount", validators= [DataRequired()])
+    amount = IntegerField(label="Amount", validators= [DataRequired()])
 
-    key = StringField("Key", validators=[DataRequired()])
+    key = StringField(label="Key", validators=[DataRequired()])
 
-    send = SubmitField("Send some BuzzCoin!")
+    send = SubmitField(label="Send some BuzzCoin!")
 
 class TransactionNotLoggedInForm(FlaskForm):
 

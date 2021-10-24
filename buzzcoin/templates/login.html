@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}
+  Login
+{% endblock %}
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-register" style="color:white">
+            <h1 class="h3 mb-3 font-weight-normal">
+                Log Into Your Account
+            </h1>
+            <br>
+            {{ form.email.label() }}
+            {{ form.email(class="form-control", placeholder="Email Address") }}
+
+            {{ form.password.label() }}
+            {{ form.password(class="form-control", placeholder="Password") }}
+
+            {{ form.remember_me.label() }}
+            {{ form.remember_me(class="form-control", placeholder="Remember Me") }}
+
+            <br>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
+        </form>
+    </div>
+</body>
+{% endblock %}
