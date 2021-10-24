@@ -1,4 +1,4 @@
-from buzzcoin import db;
+from buzz_coin import db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key = True)

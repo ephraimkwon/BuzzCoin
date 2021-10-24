@@ -9,8 +9,6 @@ from uuid import uuid4
 import jsonpickle
 from urllib.parse import urlparse
 import requests
-from transaction import *
-from block import *
 
 
 class Blockchain (object): 
@@ -199,3 +197,88 @@ class Blockchain (object):
             return True
 
         return False
+
+class Block (object):
+    def __init__(self, transactions, time, index):
+        self.nonse = 0 
+        self.index = index
+        self.transactions = transactions #Transaction Data
+        self.time = time #Time block was created
+        self.prev = '' #Hash of Previous Block
+        self.gold = "404"
+        self.hash = self.calculate_hash() #Hash of Block
+        
+    def calculate_hash(self):
+        hashTransactions = ""
+        for transaction in self.transactions:
+            hashTransactions += transaction.hash
+        hashString = str(self.time) + hashTransactions + self.prev + str(self.index) + str(self.nonse)
+        hashEncoded = json.dumps(hashString, sort_keys=True).encode()
+        return hashlib.sha256(hashEncoded).hexdigest()
+    
+    def JSONencode(self): # returns a json version of itself
+        return jsonpickle.encode(self)
+    
+    def mine_block(self):
+        
+        # checks the hash until the first 3 chars of the hash are "404" hehe
+        while self.hash[0:len(self.gold)] != self.gold:
+            self.nonse += 1
+            self.hash = self.calculate_hash()
+            # print("Nonse: " , self.nonse)
+            # print("Hash Attempt: " , self.hash)
+            # print("Target Hash: " + self.gold + "...")
+            # print("")
+        print("Block mined! Nonse to prove work: ", self.nonse)
+
+        return True
+    
+    def has_valid_transactions(self):
+        for transaction in self.transactions:
+            temp = transaction
+            if not temp.is_valid_transaction(): # if any transaction is fraudulent then return False
+                return False
+            return True
+
+class Transaction (object):
+    def __init__(self, sender, receiver, amount):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+        self.time = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
+        self.hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        hashString = self.sender + self.receiver + str(self.amount) + str(self.time)
+        hashEncoded = json.dumps(hashString, sort_keys=True).encode()
+        return hashlib.sha256(hashEncoded).hexdigest()
+    
+    # returns True if transaction is valid
+    def sign_transaction(self, key, sender_key) -> bool:
+        if self.hash != self.calculate_hash():
+            # means the transaction has been messed with
+            return False
+        if str(key.publickey().exportkey()) != str(sender_key.publickey().exportkey()):
+            # This means that the transaction is trying to be done by someone other than
+            # the sender
+            return False
+        
+        pkcs1_15.new(key)
+        self.signature = "Buzz Buzz"
+
+        return True
+    
+    def is_valid_transaction(self):
+        if self.hash != self.calculate_hash():
+            return False
+        if self.sender == self.receiver:
+            return False
+        if not self.signature or len(self.signature) == 0: # means there is no signature
+            return False
+        
+        return True
+
+
+# blockchain = Blockchain()
+# pprint(blockchain.chain_JSON_encode())
+# blockchain.get_last_block().mine_block()
