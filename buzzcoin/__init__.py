@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid4
+from buzzcoin.blockchain import Blockchain
 from blockchain import *
 from textwrap import dedent
 from flask_bcrypt import Bcrypt

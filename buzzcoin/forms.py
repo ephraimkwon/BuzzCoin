@@ -20,10 +20,41 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-
-
         # Checks if username is already taken by someone
         user = User.query.filter_by(username = username.data).first()
         if user:
             raise ValidationError("Username already taken. Please choose a different username")
         
+class LoginForm(FlaskForm):
+    email = StringField('Email', validators= [DataRequired(), Email()], render_kw= {"placeholder": "Email"})
+
+    password = PasswordField("Password", validators= [DataRequired()], render_kw= {"placeholder": "Password"})
+
+    remember_me = BooleanField("Remember Me")
+
+    submit = SubmitField("Login")
+
+
+class TransactionForm(FlaskForm):
+
+    sender = StringField("Sender", validators=[DataRequired(), Length(min = 3, max = 16)])
+
+    receiver = StringField("Receiver", validators=[DataRequired(), Length(min = 3, max = 16)])
+
+    amount = IntegerField("Amount", validators= [DataRequired()])
+
+    key = StringField("Key", validators=[DataRequired()])
+
+    send = SubmitField("Send some BuzzCoin!")
+
+class TransactionNotLoggedInForm(FlaskForm):
+
+    sender = StringField("Sender")
+
+    receiver = StringField("Receiver")
+
+    amount = IntegerField("Amount")
+
+    key = StringField("Key")
+
+    send = SubmitField("Sign in to start sending BuzzCoin")
