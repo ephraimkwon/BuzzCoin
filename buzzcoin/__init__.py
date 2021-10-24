@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from uuid import uuid4
 from blockchain import *
 from textwrap import dedent
-from flask_bcrypt import Bycrypt
+from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SQLALCHEMY_TRACK_NOTIFICATIONS'] = False
 db = SQLAlchemy(app)
 # for encryption purposes
-bcrypt = Bycrypt(app)
+bcrypt = Bcrypt(app)
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
