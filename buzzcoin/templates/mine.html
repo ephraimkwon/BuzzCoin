@@ -3,7 +3,31 @@
   Mine BuzzCoin!
 {% endblock %}
 {% block content %}
+<table class="table table-hover table-dark">
+  <thead>
+    <tr>
+        <!-- Your Columns HERE -->
+        <th scope="col">#</th>
+        <th scope="col">From</th>
+        <th scope="col">To</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Timestamp</th>
+        <th scope="col">Valid?</th>
+    </tr>
+</thead>
 <tbody>
-    <button class="btn btn-outline btn-info">Mine</button>
+    <!-- Your rows inside the table HERE: -->
+    {% for block in blockchain.chain %}
+        <tr>
+            <td>{{block.receiver}}</td>
+            <td>{{block.prev}}</td>
+            <td>{{block.time}}</td>
+            </td>
+        </tr>
+      {% endfor %}
 </tbody>
+</table>
+<body>
+  <button class="btn btn-outline btn-info">Mine</button>
+</body>
 {% endblock %}
