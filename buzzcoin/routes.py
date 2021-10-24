@@ -20,7 +20,7 @@ def blockchain_page():
     blockchain.determine_master_chain()
     return render_template('blockchain.html', blockchain = blockchain)
 
-@app.route('/mine')
+@app.route('/mine_page')
 def mine_page():
     return render_template('mine.html', blockchain=blockchain)
 
@@ -30,7 +30,7 @@ def node():
 
 @app.route('/account')
 def account_page():
-    return render_template('account.html')
+    return render_template('account.html', blockchain = blockchain)
 
 @app.route("/transaction", methods=['GET', 'POST'])
 def transaction_page():
@@ -76,13 +76,13 @@ def register_page():
 # backend stuff
 @app.route('/mine', methods = ['GET'])
 def mine():
-    miner = request.args.get('miner')
+    miner = request.args.get('miner', None)
     last_block = blockchain.get_last_block()
 
-    if len(blockchain.pending_transactions <= 1):
+    if len(blockchain.pending_transactions) <= 1:
         flash(f'Not enough pending transactions to mine!', 'danger')
     else:
-        feedback = blockchain.mine_pending_transactions()
+        feedback = blockchain.mine_pending_transactions(miner)
         if feedback:
             flash(f'Success! You have mined a block and have been rewarded', 'success')
         else:

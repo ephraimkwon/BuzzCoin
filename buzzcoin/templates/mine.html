@@ -16,20 +16,22 @@
 </thead>
 <tbody>
     <!-- Your rows inside the table HERE: -->
-    {% for block in blockchain.chain %}
+    {% for transaction in blockchain.pending_transactions %}
         <tr>
-            <td>{{block.index}}</td>
-            <td>{{block.transactions.sender}}</td>
-            <td>{{block.transactions.receiver}}</td>
-            <td>{{block.transactions.amount}}</td>
-            <td>{{block.transactions.time}}</td>
+            <td>{{transaction.hash}}</td>
+            <td>{{transaction.sender}}</td>
+            <td>{{transaction.receiver}}</td>
+            <td>{{transaction.amount}}</td>
+            <td>{{transaction.time}}</td>
             </td>
         </tr>
       {% endfor %}
 </tbody>
 </table>
 <body>
-  <a href="{{url_for('mine', miner=current_user.username)}}"><button type="button" class="button btn btn-outline btn-info">Mine</button></a>
+  <a href="{{url_for('mine', miner=current_user.username)}}"><button type="button" class="btn btn-primary">Mine</button>
+  
+  </a>
 </body>
 <style>
   .button {

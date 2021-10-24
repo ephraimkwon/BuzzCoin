@@ -14,7 +14,7 @@ import requests
 class Blockchain (object): 
     def __init__(self):
         self.chain = [self.create_genesis_block()]
-        self.pending_transactions = []
+        self.pending_transactions = [Transaction("God", "Me", 1000), Transaction("Buzz", "You", 10)]
         self.miner_reward = 10
         self.nodes = {}
         self.starting_amount = 100
@@ -67,15 +67,15 @@ class Blockchain (object):
         return len(self.chain) + 1
     
     def mine_pending_transactions(self, miner):
-        if len(self.pending_transactions <= 1):
+        if len(self.pending_transactions) <= 1:
             # can only mine if there are more than one transaction in the pending
             return False
         
         # iterates through the pending transactions and creates blocks and mines them
         # at the end it adds itself as a transaction to the pending transactions
         for i in range(len(self.pending_transactions)):
-            remaining_transactions = self.pending_transactions[i:len(remaining_transactions)]
-            new_block = Block(remaining_transactions, datetime.now().strftime("%m/%d/%Y, %H:%M:%S"))
+            remaining_transactions = self.pending_transactions[i:len(self.pending_transactions)]
+            new_block = Block(remaining_transactions, datetime.now().strftime("%m/%d/%Y, %H:%M:%S"), len(self.chain))
             prev_hash = self.get_last_block().hash
             new_block.prev = prev_hash
             new_block.mine_block()
@@ -249,7 +249,11 @@ class Transaction (object):
         self.hash = self.calculate_hash()
 
     def calculate_hash(self):
-        hashString = self.sender + self.receiver + str(self.amount) + str(self.time)
+        hashString = str(self.sender) + str(self.receiver) + str(self.amount) + str(self.time)
+        print(type(self.sender))
+        print(type(self.receiver))
+        print(type(str(self.amount)))
+        print(type(str(self.time)))
         hashEncoded = json.dumps(hashString, sort_keys=True).encode()
         return hashlib.sha256(hashEncoded).hexdigest()
     
