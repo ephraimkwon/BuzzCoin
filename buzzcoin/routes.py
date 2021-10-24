@@ -1,9 +1,10 @@
 from wtforms.validators import Email
 from buzzcoin import app
 from flask import render_template, redirect, url_for, flash, request, jsonify
-from buzzcoin.forms import RegisterForm, TransactionForm, LoginForm
+from buzzcoin.forms import LoginForm, RegisterForm, TransactionForm, TransactionNotLoggedInForm
 from buzzcoin.models import User
-from buzzcoin import blockchain, db
+from buzzcoin import blockchain, db, bcrypt
+from flask_login import login_user, current_user, logout_user, login_required
 
 @app.route('/')
 @app.route('/home')
@@ -23,27 +24,52 @@ def blockchain_page():
 def mine_page():
     return render_template('mine.html', blockchain = blockchain)
 
-@app.route('/transaction')
-def transaction_page():
+@app.route("/node")
+def node():
+	return render_template('node.html', title = "Node")
+
+@app.route("/transaction", methods=['GET', 'POST'])
+def transaction():
     form = TransactionForm()
-    return render_template('transaction.html', form=form)
+    formNL = TransactionNotLoggedInForm()
+    if form.validate_on_submit():
+        feedback = blockchain.add_transaction(form.sender.data, form.reciever.data, form.amount.data, form.key.data, form.key.data)
+        if feedback:
+            flash(f'Transaction Made!', 'success')
+        else:
+            flash(f'Error!', 'danger')
+        return render_template('transaction.html', title = "Transaction", blockchain = blockchain, form=form, formNL= formNL)
+
+    if formNL.validate_on_submit():
+        return redirect(url_for('login'))
+
+    return render_template('transaction.html', title = "Transaction", blockchain = blockchain, form=form, formNL= formNL)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register_page():
     form = RegisterForm()
     if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password1.data).decode('utf-8')
+        keys = blockchain.generate_keys()
         user_to_create = User(username=form.username.data,
                               email_address=form.email_address.data,
-                              password_hash=form.password1.data)
+                              password_hash=hashed_password,
+                              key = keys)
         db.session.add(user_to_create)
-        ##db.session.commit()
-        return redirect(url_for('home_page'))
+        db.session.commit()
+        login_user(user_to_create)
+        next_page = request.args.get('next')
+        flash(f'Account created for {form.username.data}! You are now logged in.', 'success')
+        return redirect(next_page) if next_page else redirect(url_for('home_page'))
+
     if form.errors != {}: #If there are not errors from the validations
         for err_msg in form.errors.values():
             flash(f'There was an error with creating a user: {err_msg}')
-
     return render_template('register.html', form=form)
 
+
+
+# backend stuff
 @app.route('/mine', methods = ['GET'])
 def mine():
     miner = request.args.get('miner')
